@@ -47,7 +47,7 @@ app.post('/', (req, res) => {
         res.redirect('/')
         return
       }
-      url_shortener = Math.random().toString(18).slice(-6)
+      url_shortener = Math.random().toString(18).slice(-5)
       Url.findOne({ url_shortener })
         .then(eachUrlShort => {
           if (eachUrlShort) {
