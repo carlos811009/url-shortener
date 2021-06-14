@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Url = require('../../models/Url')
-
+const path = 'http://localhost:3000/'
 let value = ''
 
 router.get('/:shortUrl', (req, res) => {
@@ -34,14 +34,17 @@ router.post('/', (req, res) => {
     .then(eachUrl => {
       if (eachUrl) {
         req.flash('warning_msg', '此網址已經申請過了')
+        value = `${path}${eachUrl.url_shortener}`
+        req.flash('message', value)
         res.redirect('/')
         return
       }
+
       url_shortener = Math.random().toString(18).slice(-5)
       Url.findOne({ url_shortener })
         .then(eachUrlShort => {
           if (eachUrlShort) {
-            url_shortener = Math.random().toString(18).slice(-6)
+            url_shortener = Math.random().toString(18).slice(-5)
             Url.create({ url: input, url_shortener })
             return
           }
@@ -49,8 +52,8 @@ router.post('/', (req, res) => {
             .catch(err => console.log(err))
         })
         .then(() => {
-          value = `http://localhost:3000/${url_shortener}`
           const success_msg = '轉換成功，可以複製網址了'
+          value = `${path}${url_shortener}`
           res.render('transfor', { url: value, success_msg })
         })
         .catch(err => console.log(err))

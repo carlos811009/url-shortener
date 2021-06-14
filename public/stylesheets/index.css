@@ -62,11 +62,18 @@ img {
 #copyBtn,
 #back {
   height: 30px;
-  padding: 0px 10px;
   border: none;
+}
+#copyBtn {
+  margin-right: 8px;
+  padding: 0px 10px;
+}
+
+#back {
+  display: flex;
+  align-items: center;
 }
 
 .btn_container {
-  display: flex;
-  justify-content: center;
+  padding: 0px;
 }
