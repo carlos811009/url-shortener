@@ -3,6 +3,21 @@ const router = express.Router()
 const Url = require('../../models/Url')
 
 let value = ''
+
+router.get('/:shortUrl', (req, res) => {
+  if (req.params.shortUrl !== 'favicon.ico') {
+    Url.findOne({ url_shortener: req.params.shortUrl })
+      .then(url => {
+        if (url) {
+          res.redirect(url.url)
+          return
+        }
+        res.redirect('/')
+      })
+      .catch(err => console.log(err))
+  }
+})
+
 router.get('/', (req, res) => {
   res.render('index')
 })
@@ -11,14 +26,14 @@ router.post('/', (req, res) => {
   let url_shortener = ''
 
   if (!input) {
-    console.log('請輸入網址')
+    req.flash('warning_msg', '請輸入網址')
     res.redirect('/')
     return
   }
   Url.findOne({ url: input })
     .then(eachUrl => {
       if (eachUrl) {
-        console.log('此網址已經申請過了')
+        req.flash('warning_msg', '此網址已經申請過了')
         res.redirect('/')
         return
       }
@@ -35,24 +50,14 @@ router.post('/', (req, res) => {
         })
         .then(() => {
           value = `http://localhost:3000/${url_shortener}`
-          res.render('transfor', { url: value })
+          const success_msg = '轉換成功，可以複製網址了'
+          res.render('transfor', { url: value, success_msg })
         })
         .catch(err => console.log(err))
     })
     .catch(err => console.log(err))
 })
-router.get('/:shortUrl', (req, res) => {
-  Url.findOne({ url_shortener: req.params.shortUrl })
-    .then(url => {
-      if (url) {
-        res.redirect(url.url)
-        return
-      }
-      console.log('沒有這個短網址')
-      res.redirect('/')
-    })
-    .catch(err => console.log(err))
-})
+
 
 
 module.exports = router

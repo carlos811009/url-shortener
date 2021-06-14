@@ -1,16 +1,30 @@
 const express = require('express')
+const session = require('express-session')
 const exphns = require('express-handlebars')
 const app = express()
 const PORT = 3000
 const router = require('./routes/index')
+const flash = require('connect-flash')
 
 
 app.engine('hbs', exphns({ defaultLayout: 'main', extname: 'hbs' }))
 app.set('view engine', 'hbs')
-require('./config/mongoose')
 
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
+app.use(session({
+  secret: "thisIsMySecret",
+  resave: false,
+  saveUninitialized: true
+}))
+require('./config/mongoose')
+
+app.use(flash())
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg')
+  res.locals.warning_msg = req.flash('warning_msg')
+  next()
+})
 
 
 app.use(router)
