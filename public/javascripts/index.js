@@ -1,5 +1,5 @@
-const result = document.querySelector('#result_container')
-const short_url = document.querySelector('#short')
+const result = document.querySelector('.result_container')
+const short_url = document.querySelector('.short')
 if (result) {
   result.addEventListener('click', event => {
     const target = event.target

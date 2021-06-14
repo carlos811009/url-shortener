@@ -1,6 +1,6 @@
-<div id="result_container">
+{{!-- <div id="result_container"> --}}
   {{!-- <textarea type="text" class="short" id="short" value="{{url}}"> --}}
-    <textarea name="short" id="short" cols="30" row="1">{{url}}</textarea>
+    {{!-- <textarea name="short" id="short" cols="30" row="1">{{url}}</textarea>
 
   <button id="copyBtn">
     COPY URL
@@ -10,4 +10,16 @@
       back
     </button>
   </a>
+</div> --}}
+
+<div class="result_container mx-auto row">
+  <div class="img col-12 mt-4">
+    <input type="text" name="short" class="short" value='{{url}}'>
+  </div>
+  <div class="btn_container mx-auto col-10 row">
+    <button type="button" class="btn btn-info col-9" id="copyBtn">COPY URL</button>
+    <a href="/">
+      <button type="button" class="btn btn-secondary" id="back">Back</button>
+    </a>
+  </div>
 </div>

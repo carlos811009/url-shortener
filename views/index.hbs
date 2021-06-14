@@ -1,7 +1,11 @@
-<div>
-  image
+<div class="container mx-auto row">
+  <div class="img col-12 mt-4">
+    <img
+      src="https://image.cache.storm.mg/styles/smg-800x533-fp/s3/media/image/2020/11/07/20201107-092915_U13380_M651499_4ac4.jpg?itok=6KFZde7p"
+      width="90%" class="d-inline-block align-top" alt="">
+  </div>
+  <form action="/" class="col-12 mt-3" method="post" id="transfor_form">
+    <input type="text" id="input" name="input" value="{{input}}" placeholder="請輸入網址">
+    <button type="submit" class="btn btn-info transforBtn">轉換</button>
+  </form>
 </div>
-<form action="/" method="post" id="transfor_form">
-  <input type="text" id="input" name="input" value="{{input}}" placeholder="請輸入網址">
-  <button type='submit'> 轉換 </button>
-</form>
