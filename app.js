@@ -2,12 +2,12 @@ const express = require('express')
 const session = require('express-session')
 const exphns = require('express-handlebars')
 const app = express()
-const router = require('./routes/index')
 const flash = require('connect-flash')
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
+const router = require('./routes/index')
 
 const PORT = process.env.PORT
 app.engine('hbs', exphns({ defaultLayout: 'main', extname: 'hbs' }))
