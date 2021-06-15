@@ -2,18 +2,21 @@ const express = require('express')
 const session = require('express-session')
 const exphns = require('express-handlebars')
 const app = express()
-const PORT = 3000
 const router = require('./routes/index')
 const flash = require('connect-flash')
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
 
+const PORT = process.env.PORT
 app.engine('hbs', exphns({ defaultLayout: 'main', extname: 'hbs' }))
 app.set('view engine', 'hbs')
 
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.use(session({
-  secret: "thisIsMySecret",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }))

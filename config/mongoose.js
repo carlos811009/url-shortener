@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost/url-shortener', { useUnifiedTopology: true, useNewUrlParser: true })
+const MONGODB_URI = process.env.MONGODB_URI
+mongoose.connect(MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true })
 
 const db = mongoose.connection
 
@@ -11,5 +12,3 @@ db.on('error', () => {
 db.once('open', () => {
   console.log('mongodb connected')
 })
-
-module.exports = db
