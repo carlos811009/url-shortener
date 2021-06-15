@@ -1,0 +1,4 @@
+MONGODB_URI=mongodb://localhost/url-shortener
+SESSION_SECRET=ThisIsMySecret
+PORT=3000
+WEB_PATH = http://localhost:3000/
