@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
 })
 router.post('/', (req, res) => {
   const input = req.body.input
-  let url_shortener = ''
+  let url_shortener = generateShortUrl()
 
   if (!input) {
     req.flash('warning_msg', '請輸入網址')
@@ -42,19 +42,11 @@ router.post('/', (req, res) => {
       }
       Url.findOne({ url_shortener })
         .then(eachUrlShort => {
-          if (eachUrlShort) {
-            let reRandomUrl_shortener = ''
-            for (i = 0; i < url_shortener.length; i++) {
-              const length = url_shortener.length + 1
-              const index = Math.floor(Math.random() * length)
-              reRandomUrl_shortener += url_shortener.slice(index, index + 1)
-            }
-            Url.create({ url: input, url_shortener: reRandomUrl_shortener })
-            return
-          }
           url_shortener = generateShortUrl()
+          while (eachUrlShort === url_shortener) {
+            url_shortener = generateShortUrl()
+          }
           Url.create({ url: input, url_shortener })
-            .catch(err => console.log(err))
         })
         .then(() => {
           const success_msg = '轉換成功，可以複製網址了'

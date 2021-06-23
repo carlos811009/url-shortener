@@ -7,9 +7,15 @@ function getShortUrl() {
   let shortUrl = ''
   for (i = 0; i < shortUrlLength; i++) {
     const length = data.length + 1
-    const index = Math.floor(Math.random() * length)
-    shortUrl += data.slice(index, index + 1)
+    let index = Math.floor(Math.random() * length)
+    if (index === data.length) {
+      index--
+      shortUrl += data.slice(index, index + 1)
+    } else {
+      shortUrl += data.slice(index, index + 1)
+    }
   }
+  console.log(shortUrl)
   return shortUrl
 }
 
