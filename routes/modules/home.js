@@ -43,8 +43,13 @@ router.post('/', (req, res) => {
       Url.findOne({ url_shortener })
         .then(eachUrlShort => {
           if (eachUrlShort) {
-            url_shortener = generateShortUrl()
-            Url.create({ url: input, url_shortener })
+            let reRandomUrl_shortener = ''
+            for (i = 0; i < url_shortener.length; i++) {
+              const length = url_shortener.length + 1
+              const index = Math.floor(Math.random() * length)
+              reRandomUrl_shortener += url_shortener.slice(index, index + 1)
+            }
+            Url.create({ url: input, url_shortener: reRandomUrl_shortener })
             return
           }
           url_shortener = generateShortUrl()
