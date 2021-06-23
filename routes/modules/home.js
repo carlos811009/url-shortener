@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const Url = require('../../models/Url')
+const generateShortUrl = require('./generateShortUrl')
+
 let value = ''
 const WEB_PATH = process.env.WEB_PATH
 router.get('/:shortUrl', (req, res) => {
@@ -38,15 +40,14 @@ router.post('/', (req, res) => {
         res.redirect('/')
         return
       }
-
-      url_shortener = Math.random().toString(18).slice(-5)
       Url.findOne({ url_shortener })
         .then(eachUrlShort => {
           if (eachUrlShort) {
-            url_shortener = Math.random().toString(18).slice(-5)
+            url_shortener = generateShortUrl()
             Url.create({ url: input, url_shortener })
             return
           }
+          url_shortener = generateShortUrl()
           Url.create({ url: input, url_shortener })
             .catch(err => console.log(err))
         })
