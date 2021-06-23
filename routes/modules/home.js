@@ -42,18 +42,20 @@ router.post('/', (req, res) => {
       }
       Url.findOne({ url_shortener })
         .then(eachUrlShort => {
-          url_shortener = generateShortUrl()
-          while (eachUrlShort === url_shortener) {
-            url_shortener = generateShortUrl()
+          if (eachUrlShort) {
+            while (eachUrlShort.url_shortener === url_shortener) {
+              url_shortener = generateShortUrl()
+            }
           }
           Url.create({ url: input, url_shortener })
+            .then(() => {
+              const success_msg = '轉換成功，可以複製網址了'
+              value = `${WEB_PATH}${url_shortener}`
+              res.render('transfor', { url: value, success_msg })
+            })
+            .catch(err => console.log(err))
+
         })
-        .then(() => {
-          const success_msg = '轉換成功，可以複製網址了'
-          value = `${WEB_PATH}${url_shortener}`
-          res.render('transfor', { url: value, success_msg })
-        })
-        .catch(err => console.log(err))
     })
     .catch(err => console.log(err))
 })

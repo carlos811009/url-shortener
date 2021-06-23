@@ -15,7 +15,6 @@ function getShortUrl() {
       shortUrl += data.slice(index, index + 1)
     }
   }
-  console.log(shortUrl)
   return shortUrl
 }
 
