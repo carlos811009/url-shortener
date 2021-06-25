@@ -40,20 +40,34 @@ router.post('/', (req, res) => {
         res.redirect('/')
         return
       }
-      Url.findOne({ url_shortener })
+      Url.findOne({ url_shortener: url_shortener })
         .then(eachUrlShort => {
           if (eachUrlShort) {
             while (eachUrlShort.url_shortener === url_shortener) {
               url_shortener = generateShortUrl()
+              Url.findOne({ url_shortener: url_shortener })
+                .then(other => {
+                  if (!other) {
+                    Url.create({ url: input, url_shortener })
+                      .then(() => {
+                        const success_msg = '轉換成功，可以複製網址了'
+                        value = `${WEB_PATH}${url_shortener}`
+                        return res.render('transfor', { url: value, success_msg })
+                      })
+                      .catch(err => console.log(err))
+                  }
+                })
+                .catch(err => console.log(err))
             }
+          } else {
+            Url.create({ url: input, url_shortener })
+              .then(() => {
+                const success_msg = '轉換成功，可以複製網址了'
+                value = `${WEB_PATH}${url_shortener}`
+                res.render('transfor', { url: value, success_msg })
+              })
+              .catch(err => console.log(err))
           }
-          Url.create({ url: input, url_shortener })
-            .then(() => {
-              const success_msg = '轉換成功，可以複製網址了'
-              value = `${WEB_PATH}${url_shortener}`
-              res.render('transfor', { url: value, success_msg })
-            })
-            .catch(err => console.log(err))
 
         })
     })
