@@ -25,6 +25,7 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   const input = req.body.input
   let url_shortener = generateShortUrl()
+  url_shortener = 'bbb'
   if (!input) {
     req.flash('warning_msg', '請輸入網址')
     res.redirect('/')
@@ -39,28 +40,22 @@ router.post('/', (req, res) => {
         res.redirect('/')
         return
       }
-      Url.findOne({ url_shortener: url_shortener })
-        .then(eachUrlShort => {
-          if (eachUrlShort) {
-            async function check() {
-              try {
-                await checkShortUrl(res, url_shortener, input, WEB_PATH)
-              } catch (err) { console.warn(err) }
-            }
-            while (eachUrlShort.url_shortener === url_shortener) {
-              url_shortener = generateShortUrl()
-              check()
-            }
-          } else {
-            Url.create({ url: input, url_shortener })
-              .then(() => {
-                const success_msg = '轉換成功，可以複製網址了'
-                value = `${WEB_PATH}${url_shortener}`
-                res.render('transfor', { url: value, success_msg })
-              })
-              .catch(err => console.log(err))
+      console.log('step1')
+      Url.find()
+        .then(allURLs => {
+          console.log(url_shortener)
+          while (allURLs.map(r => r.url_shortener).includes(url_shortener)) {
+            url_shortener = generateShortUrl()
+            console.log('in while')
           }
-
+          console.log('step2')
+          Url.create({ url: input, url_shortener })
+            .then(() => {
+              const success_msg = '轉換成功，可以複製網址了'
+              value = `${WEB_PATH}${url_shortener}`
+              res.render('transfor', { url: value, success_msg })
+            })
+            .catch(err => console.log(err))
         })
     })
     .catch(err => console.log(err))
@@ -69,3 +64,32 @@ router.post('/', (req, res) => {
 
 
 module.exports = router
+
+
+
+
+//非同步方式
+
+// Url.findOne({ url_shortener: url_shortener })
+//   .then(eachUrlShort => {
+//     if (eachUrlShort) {
+//       async function check() {
+//         try {
+//           await checkShortUrl(res, url_shortener, input, WEB_PATH)
+//         } catch (err) { console.warn(err) }
+//       }
+//       while (eachUrlShort.url_shortener === url_shortener) {
+//         url_shortener = generateShortUrl()
+//         check()
+//       }
+//     } else {
+//       Url.create({ url: input, url_shortener })
+//         .then(() => {
+//           const success_msg = '轉換成功，可以複製網址了'
+//           value = `${WEB_PATH}${url_shortener}`
+//           res.render('transfor', { url: value, success_msg })
+//         })
+//         .catch(err => console.log(err))
+//     }
+
+//   })
