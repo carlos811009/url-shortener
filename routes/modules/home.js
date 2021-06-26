@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Url = require('../../models/Url')
 const generateShortUrl = require('./generateShortUrl')
-
+const checkShortUrl = require('./checkShortUrl')
 let value = ''
 const WEB_PATH = process.env.WEB_PATH
 router.get('/:shortUrl', (req, res) => {
@@ -25,7 +25,6 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   const input = req.body.input
   let url_shortener = generateShortUrl()
-
   if (!input) {
     req.flash('warning_msg', '請輸入網址')
     res.redirect('/')
@@ -43,21 +42,14 @@ router.post('/', (req, res) => {
       Url.findOne({ url_shortener: url_shortener })
         .then(eachUrlShort => {
           if (eachUrlShort) {
+            async function check() {
+              try {
+                await checkShortUrl(res, url_shortener, input, WEB_PATH)
+              } catch (err) { console.warn(err) }
+            }
             while (eachUrlShort.url_shortener === url_shortener) {
               url_shortener = generateShortUrl()
-              Url.findOne({ url_shortener: url_shortener })
-                .then(other => {
-                  if (!other) {
-                    Url.create({ url: input, url_shortener })
-                      .then(() => {
-                        const success_msg = '轉換成功，可以複製網址了'
-                        value = `${WEB_PATH}${url_shortener}`
-                        return res.render('transfor', { url: value, success_msg })
-                      })
-                      .catch(err => console.log(err))
-                  }
-                })
-                .catch(err => console.log(err))
+              check()
             }
           } else {
             Url.create({ url: input, url_shortener })
