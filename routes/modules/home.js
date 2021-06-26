@@ -25,7 +25,6 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   const input = req.body.input
   let url_shortener = generateShortUrl()
-  url_shortener = 'bbb'
   if (!input) {
     req.flash('warning_msg', '請輸入網址')
     res.redirect('/')
@@ -40,15 +39,11 @@ router.post('/', (req, res) => {
         res.redirect('/')
         return
       }
-      console.log('step1')
       Url.find()
         .then(allURLs => {
-          console.log(url_shortener)
           while (allURLs.map(r => r.url_shortener).includes(url_shortener)) {
             url_shortener = generateShortUrl()
-            console.log('in while')
           }
-          console.log('step2')
           Url.create({ url: input, url_shortener })
             .then(() => {
               const success_msg = '轉換成功，可以複製網址了'
